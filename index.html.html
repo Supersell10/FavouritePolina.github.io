@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>С 14 февраля ❤️</title>
+
+<style>
+body {
+    margin: 0;
+    overflow: hidden;
+    background: radial-gradient(circle at center, #ff6b9a, #ff1e56);
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* ===== КОНВЕРТ ===== */
+.envelope {
+    position: relative;
+    width: 360px;
+    height: 240px;
+    cursor: pointer;
+    animation: breathe 2s infinite ease-in-out;
+    transition: transform 0.6s ease, opacity 0.6s ease;
+}
+
+@keyframes breathe {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+    100% { transform: scale(1); }
+}
+
+/* Основа */
+.envelope-body {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #f2f2f2;
+    border-radius: 12px;
+    border: 4px solid #000;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    overflow: hidden;
+}
+
+/* SVG линии сгиба */
+.envelope-lines {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+/* Верхний клапан */
+.envelope-flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 140px;
+    background: #ffffff;
+
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+
+    border: 4px solid #000;
+    border-bottom: none;
+
+    clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+
+    transform-origin: top center;
+    transition: transform 0.6s ease;
+    z-index: 5;
+}
+
+/* Сердце */
+.heart-seal {
+    position: absolute;
+    top: 95px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 70px;
+    z-index: 6;
+    pointer-events: none;
+}
+
+/* Открытие */
+.open .envelope-flap {
+    transform: rotateX(180deg);
+}
+
+/* Сообщение */
+.hidden-content {
+    position: absolute;
+    text-align: center;
+    color: white;
+    font-size: 5em;
+    display: none;
+    animation: fadeIn 2s forwards;
+    text-shadow: 0 0 25px rgba(255,255,255,0.9);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Сердца */
+.heart {
+    position: absolute;
+    pointer-events: none;
+    animation: floatUp linear forwards;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) scale(0.8);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-800px) scale(1.3);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="envelope" onclick="openLetter()" id="envelope">
+    <div class="envelope-body">
+        <!-- ЛИНИИ ДО НИЖНЕЙ ТОЧКИ СЕРДЦА -->
+        <svg class="envelope-lines" viewBox="0 0 360 240" preserveAspectRatio="none">
+            <line x1="0" y1="0" x2="180" y2="170" stroke="black" stroke-width="3"/>
+            <line x1="360" y1="0" x2="180" y2="170" stroke="black" stroke-width="3"/>
+        </svg>
+    </div>
+
+    <div class="envelope-flap"></div>
+    <div class="heart-seal">❤️</div>
+</div>
+
+<div class="hidden-content" id="message">
+    С 14 февраля ❤️
+</div>
+
+<script>
+const envelope = document.getElementById("envelope");
+const message = document.getElementById("message");
+
+function openLetter() {
+    envelope.classList.add("open");
+    envelope.style.animation = "none";
+    envelope.style.transform = "scale(0)";
+    envelope.style.opacity = "0";
+    
+    setTimeout(() => {
+        envelope.style.display = "none";
+        message.style.display = "block";
+        startHearts();
+    }, 600);
+}
+
+function createHeart(x = null, y = null) {
+    const heart = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    heart.setAttribute("viewBox", "0 0 24 24");
+    heart.setAttribute("class", "heart");
+
+    const size = Math.random() * 60 + 40;
+    heart.style.width = size + "px";
+    heart.style.height = size + "px";
+
+    const startX = x !== null ? x : Math.random() * window.innerWidth;
+    const startY = y !== null ? y : window.innerHeight;
+
+    heart.style.left = startX + "px";
+    heart.style.top = startY + "px";
+
+    const duration = Math.random() * 3 + 4;
+    heart.style.animationDuration = duration + "s";
+
+    const colors = ["#ff0033", "#ff4d6d", "#ff85a2", "#ff1e56", "#ff99cc"];
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d",
+        "M12 21s-6.5-4.35-9.33-7.17C.87 12.03 1 9.28 2.76 7.76 4.52 6.24 7.27 6.37 8.99 8.09L12 11.1l3.01-3.01c1.72-1.72 4.47-1.85 6.23-.33 1.76 1.52 1.89 4.27.09 6.07C18.5 16.65 12 21 12 21z"
+    );
+    path.setAttribute("fill", randomColor);
+
+    heart.appendChild(path);
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+        heart.remove();
+    }, duration * 1000);
+}
+
+function startHearts() {
+    setInterval(() => {
+        createHeart();
+    }, 400);
+
+    document.addEventListener("click", (e) => {
+        for (let i = 0; i < 12; i++) {
+            createHeart(e.clientX, e.clientY);
+        }
+    });
+}
+</script>
+
+</body>
+</html>
+
+
+
