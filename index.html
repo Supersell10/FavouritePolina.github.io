@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>С 14 февраля ❤️</title>
 
 <style>
@@ -24,6 +24,8 @@ body {
     cursor: pointer;
     animation: breathe 2s infinite ease-in-out;
     transition: transform 0.6s ease, opacity 0.6s ease;
+    -webkit-animation: breathe 2s infinite ease-in-out;
+    -webkit-transition: -webkit-transform 0.6s ease, opacity 0.6s ease;
 }
 
 @keyframes breathe {
@@ -31,37 +33,31 @@ body {
     50% { transform: scale(1.06); }
     100% { transform: scale(1); }
 }
+@-webkit-keyframes breathe {
+    0% { -webkit-transform: scale(1); }
+    50% { -webkit-transform: scale(1.06); }
+    100% { -webkit-transform: scale(1); }
+}
 
-/* Основа */
+/* Основа конверта */
 .envelope-body {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: #f2f2f2;
+    background: white;
     border-radius: 12px;
     border: 4px solid #000;
     box-shadow: 0 15px 40px rgba(0,0,0,0.25);
-    overflow: hidden;
 }
 
-/* SVG линии сгиба */
-.envelope-lines {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-}
-
-/* Верхний клапан */
+/* РОВНЫЙ клапан */
 .envelope-flap {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 140px;
-    background: #ffffff;
+    background: white;
 
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
@@ -71,24 +67,50 @@ body {
 
     clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
 
+    -webkit-transform-origin: top center;
     transform-origin: top center;
+
     transition: transform 0.6s ease;
-    z-index: 5;
+    -webkit-transition: -webkit-transform 0.6s ease;
 }
 
-/* Сердце */
-.heart-seal {
+/* Линии от верхних углов до сердца */
+.envelope-line-left, .envelope-line-right {
     position: absolute;
-    top: 95px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 70px;
-    z-index: 6;
+    border-top: 2px solid #000;
+    width: 180px;
+    top: 4px;
     pointer-events: none;
 }
 
-/* Открытие */
+.envelope-line-left {
+    left: 4px;
+    transform-origin: left center;
+    transform: rotate(55deg);
+}
+
+.envelope-line-right {
+    right: 4px;
+    transform-origin: right center;
+    transform: rotate(-55deg);
+}
+
+/* Сердце-печать */
+.heart-seal {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 100px;
+    z-index: 3;
+    pointer-events: none;
+    color: #ff1e56;
+    user-select: none;
+}
+
+/* Анимация открытия */
 .open .envelope-flap {
+    -webkit-transform: rotateX(180deg);
     transform: rotateX(180deg);
 }
 
@@ -100,6 +122,7 @@ body {
     font-size: 5em;
     display: none;
     animation: fadeIn 2s forwards;
+    -webkit-animation: fadeIn 2s forwards;
     text-shadow: 0 0 25px rgba(255,255,255,0.9);
 }
 
@@ -107,12 +130,17 @@ body {
     from { opacity: 0; transform: scale(0.8); }
     to { opacity: 1; transform: scale(1); }
 }
+@-webkit-keyframes fadeIn {
+    from { opacity: 0; -webkit-transform: scale(0.8); }
+    to { opacity: 1; -webkit-transform: scale(1); }
+}
 
-/* Сердца */
+/* ===== СЕРДЕЧКИ ===== */
 .heart {
     position: absolute;
     pointer-events: none;
     animation: floatUp linear forwards;
+    -webkit-animation: floatUp linear forwards;
 }
 
 @keyframes floatUp {
@@ -125,21 +153,28 @@ body {
         opacity: 0;
     }
 }
+@-webkit-keyframes floatUp {
+    0% {
+        -webkit-transform: translateY(0) scale(0.8);
+        opacity: 1;
+    }
+    100% {
+        -webkit-transform: translateY(-800px) scale(1.3);
+        opacity: 0;
+    }
+}
 </style>
 </head>
 
 <body>
 
-<div class="envelope" onclick="openLetter()" id="envelope">
-    <div class="envelope-body">
-        <!-- ЛИНИИ ДО НИЖНЕЙ ТОЧКИ СЕРДЦА -->
-        <svg class="envelope-lines" viewBox="0 0 360 240" preserveAspectRatio="none">
-            <line x1="0" y1="0" x2="180" y2="170" stroke="black" stroke-width="3"/>
-            <line x1="360" y1="0" x2="180" y2="170" stroke="black" stroke-width="3"/>
-        </svg>
-    </div>
-
+<div class="envelope" onclick="openLetter()" id="envelope" aria-label="Открытка с сердцем">
+    <div class="envelope-body"></div>
     <div class="envelope-flap"></div>
+
+    <div class="envelope-line-left"></div>
+    <div class="envelope-line-right"></div>
+
     <div class="heart-seal">❤️</div>
 </div>
 
@@ -154,9 +189,13 @@ const message = document.getElementById("message");
 function openLetter() {
     envelope.classList.add("open");
     envelope.style.animation = "none";
+    envelope.style.webkitAnimation = "none";
+
     envelope.style.transform = "scale(0)";
+    envelope.style.webkitTransform = "scale(0)";
+
     envelope.style.opacity = "0";
-    
+
     setTimeout(() => {
         envelope.style.display = "none";
         message.style.display = "block";
@@ -165,7 +204,10 @@ function openLetter() {
 }
 
 function createHeart(x = null, y = null) {
-    const heart = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    const NS = "http://www.w3.org/2000/svg";
+
+    const heart = document.createElementNS(NS, "svg");
+    heart.setAttribute("xmlns", NS);
     heart.setAttribute("viewBox", "0 0 24 24");
     heart.setAttribute("class", "heart");
 
@@ -181,11 +223,12 @@ function createHeart(x = null, y = null) {
 
     const duration = Math.random() * 3 + 4;
     heart.style.animationDuration = duration + "s";
+    heart.style.webkitAnimationDuration = duration + "s";
 
     const colors = ["#ff0033", "#ff4d6d", "#ff85a2", "#ff1e56", "#ff99cc"];
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const path = document.createElementNS(NS, "path");
     path.setAttribute("d",
         "M12 21s-6.5-4.35-9.33-7.17C.87 12.03 1 9.28 2.76 7.76 4.52 6.24 7.27 6.37 8.99 8.09L12 11.1l3.01-3.01c1.72-1.72 4.47-1.85 6.23-.33 1.76 1.52 1.89 4.27.09 6.07C18.5 16.65 12 21 12 21z"
     );
@@ -214,6 +257,8 @@ function startHearts() {
 
 </body>
 </html>
+
+
 
 
 
