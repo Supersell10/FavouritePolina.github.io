@@ -2,7 +2,6 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>С 14 февраля ❤️</title>
 
 <style>
@@ -20,8 +19,8 @@ body {
 /* ===== КОНВЕРТ ===== */
 .envelope {
     position: relative;
-    width: min(90vw, 360px);
-    aspect-ratio: 3 / 2;
+    width: 360px;
+    height: 240px;
     cursor: pointer;
     animation: breathe 2s infinite ease-in-out;
     transition: transform 0.6s ease, opacity 0.6s ease;
@@ -50,14 +49,15 @@ body {
     position: absolute;
     width: 100%;
     height: 100%;
-    pointer-events: none;
 }
 
-/* Верхний клапан */
+/* Клапан */
 .envelope-flap {
     position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 60%;
+    height: 140px;
     background: #ffffff;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
@@ -69,16 +69,15 @@ body {
     z-index: 5;
 }
 
-/* SVG сердце */
+/* ===== РОВНОЕ СЕРДЦЕ ===== */
 .heart-seal {
     position: absolute;
-    top: 38%;
     left: 50%;
+    top: 170px; /* точка пересечения линий */
     transform: translate(-50%, -50%);
-    width: 22%;
-    height: auto;
+    width: 80px;
+    height: 80px;
     z-index: 6;
-    pointer-events: none;
 }
 
 /* Открытие */
@@ -91,11 +90,10 @@ body {
     position: absolute;
     text-align: center;
     color: white;
-    font-size: clamp(28px, 6vw, 64px);
+    font-size: 5em;
     display: none;
     animation: fadeIn 2s forwards;
     text-shadow: 0 0 25px rgba(255,255,255,0.9);
-    padding: 20px;
 }
 
 @keyframes fadeIn {
@@ -103,7 +101,7 @@ body {
     to { opacity: 1; transform: scale(1); }
 }
 
-/* Плавающие сердца */
+/* Летающие сердца */
 .heart {
     position: absolute;
     pointer-events: none;
@@ -111,14 +109,8 @@ body {
 }
 
 @keyframes floatUp {
-    0% {
-        transform: translateY(0) scale(0.8);
-        opacity: 1;
-    }
-    100% {
-        transform: translateY(-100vh) scale(1.3);
-        opacity: 0;
-    }
+    0% { transform: translateY(0) scale(0.8); opacity: 1; }
+    100% { transform: translateY(-800px) scale(1.3); opacity: 0; }
 }
 </style>
 </head>
@@ -127,22 +119,22 @@ body {
 
 <div class="envelope" onclick="openLetter()" id="envelope">
     <div class="envelope-body">
-        <svg class="envelope-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <line x1="0" y1="0" x2="50" y2="70" stroke="black" stroke-width="2"/>
-            <line x1="100" y1="0" x2="50" y2="70" stroke="black" stroke-width="2"/>
+        <svg class="envelope-lines" viewBox="0 0 360 240">
+            <line x1="0" y1="0" x2="180" y2="170" stroke="black" stroke-width="3"/>
+            <line x1="360" y1="0" x2="180" y2="170" stroke="black" stroke-width="3"/>
         </svg>
     </div>
 
     <div class="envelope-flap"></div>
 
-    <!-- Универсальное SVG сердце -->
-    <svg class="heart-seal" viewBox="0 0 24 24">
-        <path fill="#ff1e56"
-        d="M12 21s-6.5-4.35-9.33-7.17C.87 12.03 1 9.28 2.76 7.76 
-           4.52 6.24 7.27 6.37 8.99 8.09L12 11.1l3.01-3.01
-           c1.72-1.72 4.47-1.85 6.23-.33
-           1.76 1.52 1.89 4.27.09 6.07
-           C18.5 16.65 12 21 12 21z"/>
+    <!-- ИДЕАЛЬНО РОВНОЕ СЕРДЦЕ -->
+    <svg class="heart-seal" viewBox="0 0 100 100">
+        <path d="M50 85 
+                 L20 55 
+                 A20 20 0 0 1 50 30 
+                 A20 20 0 0 1 80 55 
+                 Z"
+              fill="#ff2e63"/>
     </svg>
 </div>
 
@@ -169,10 +161,10 @@ function openLetter() {
 
 function createHeart(x = null, y = null) {
     const heart = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    heart.setAttribute("viewBox", "0 0 24 24");
+    heart.setAttribute("viewBox", "0 0 100 100");
     heart.setAttribute("class", "heart");
 
-    const size = Math.random() * 40 + 30;
+    const size = Math.random() * 60 + 40;
     heart.style.width = size + "px";
     heart.style.height = size + "px";
 
@@ -190,7 +182,7 @@ function createHeart(x = null, y = null) {
 
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.setAttribute("d",
-        "M12 21s-6.5-4.35-9.33-7.17C.87 12.03 1 9.28 2.76 7.76 4.52 6.24 7.27 6.37 8.99 8.09L12 11.1l3.01-3.01c1.72-1.72 4.47-1.85 6.23-.33 1.76 1.52 1.89 4.27.09 6.07C18.5 16.65 12 21 12 21z"
+        "M50 85 L20 55 A20 20 0 0 1 50 30 A20 20 0 0 1 80 55 Z"
     );
     path.setAttribute("fill", randomColor);
 
@@ -208,7 +200,7 @@ function startHearts() {
     }, 400);
 
     document.addEventListener("click", (e) => {
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 12; i++) {
             createHeart(e.clientX, e.clientY);
         }
     });
@@ -217,6 +209,9 @@ function startHearts() {
 
 </body>
 </html>
+
+
+
 
 
 
