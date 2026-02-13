@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>С днём святого Валентина!</title>
 
-<!-- Рукописный шрифт -->
 <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 
 <style>
@@ -78,12 +77,13 @@ body {
     width: 80px;
     height: 80px;
     z-index: 6;
-    pointer-events: none;
 }
 
 .open .envelope-flap {
     transform: rotateX(180deg);
 }
+
+/* ===== ВТОРОЙ СЛАЙД ===== */
 
 .hidden-content {
     position: absolute;
@@ -94,6 +94,7 @@ body {
     animation: fadeIn 2s forwards;
     text-shadow: 0 0 25px rgba(255,255,255,0.9);
     font-family: 'Pacifico', cursive;
+    z-index: 10;
 }
 
 @keyframes fadeIn {
@@ -101,10 +102,25 @@ body {
     to { opacity: 1; transform: scale(1); }
 }
 
+/* ===== ФРАЗЫ (как было) ===== */
+
+.floating-text {
+    position: absolute;
+    font-family: 'Pacifico', cursive;
+    font-size: 2.2em;
+    pointer-events: none;
+    animation: floatUp linear forwards;
+    white-space: nowrap;
+    z-index: 6;
+}
+
+/* ===== СЕРДЕЧКИ ===== */
+
 .heart {
     position: absolute;
     pointer-events: none;
     animation: floatUp linear forwards;
+    z-index: 4;
 }
 
 @keyframes floatUp {
@@ -124,7 +140,7 @@ body {
 
 <div class="envelope" onclick="openLetter()" id="envelope">
     <div class="envelope-body">
-        <svg class="envelope-lines" viewBox="0 0 360 240" preserveAspectRatio="none">
+        <svg class="envelope-lines" viewBox="0 0 360 240">
             <line x1="0" y1="0" x2="180" y2="170" stroke="black" stroke-width="3"/>
             <line x1="360" y1="0" x2="180" y2="170" stroke="black" stroke-width="3"/>
         </svg>
@@ -133,9 +149,12 @@ body {
     <div class="envelope-flap"></div>
 
     <svg class="heart-seal" viewBox="0 0 24 24">
-        <path d="M12 21 C12 21 4 14.5 4 9 C4 6.5 6 5 8 5 
-                 C10 5 12 7 12 7 C12 7 14 5 16 5 
-                 C18 5 20 6.5 20 9 C20 14.5 12 21 12 21 Z"
+        <path d="M12 21 C12 21 4 14.5 4 9 
+                 C4 6.5 6 5 8 5 
+                 C10 5 12 7 12 7 
+                 C12 7 14 5 16 5 
+                 C18 5 20 6.5 20 9 
+                 C20 14.5 12 21 12 21 Z"
               fill="#ff2e63"/>
     </svg>
 </div>
@@ -158,8 +177,11 @@ function openLetter() {
         envelope.style.display = "none";
         message.style.display = "block";
         startHearts();
+        startFloatingText();
     }, 600);
 }
+
+/* ===== СЕРДЕЧКИ ===== */
 
 function createHeart(x = null, y = null) {
     const heart = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -191,21 +213,52 @@ function createHeart(x = null, y = null) {
     heart.appendChild(path);
     document.body.appendChild(heart);
 
-    setTimeout(() => {
-        heart.remove();
-    }, duration * 1000);
+    setTimeout(() => heart.remove(), duration * 1000);
 }
 
 function startHearts() {
-    setInterval(() => {
-        createHeart();
-    }, 400);
+    setInterval(() => createHeart(), 400);
 
     document.addEventListener("click", (e) => {
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < 10; i++) {
             createHeart(e.clientX, e.clientY);
         }
     });
+}
+
+/* ===== ФРАЗЫ ===== */
+
+function createFloatingText(text) {
+    const element = document.createElement("div");
+    element.className = "floating-text";
+    element.innerText = text;
+
+    element.style.left = Math.random() * window.innerWidth + "px";
+    element.style.top = window.innerHeight + "px";
+
+    const duration = Math.random() * 3 + 4;
+    element.style.animationDuration = duration + "s";
+
+    const colors = ["#ff0033", "#ff4d6d", "#ff85a2", "#ff1e56", "#ff99cc"];
+    element.style.color = colors[Math.floor(Math.random() * colors.length)];
+
+    document.body.appendChild(element);
+    setTimeout(() => element.remove(), duration * 1000);
+}
+
+function startFloatingText() {
+    const phrases = [
+        "Полине с любовью!",
+        "Самой доброй!",
+        "Самой нежной!",
+        "Ты моя радость!",
+        "Самая яркая звездочка!"
+    ];
+
+    setInterval(() => {
+        const randomText = phrases[Math.floor(Math.random() * phrases.length)];
+        createFloatingText(randomText);
+    }, 900);
 }
 </script>
 
