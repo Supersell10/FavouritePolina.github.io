@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 
 <style>
+/* весь твой CSS без изменений */
 html, body {
     margin: 0;
     padding: 0;
@@ -94,7 +95,7 @@ html, body {
     position: absolute;
     text-align: center;
     color: white;
-    font-size: clamp(26px, 7vw, 48px); /* немного увеличил */
+    font-size: clamp(26px, 7vw, 48px);
     display: none;
     animation: fadeIn 2s forwards;
     text-shadow: 0 0 25px rgba(255,255,255,0.9);
@@ -115,8 +116,6 @@ html, body {
     to { opacity: 1; transform: scale(1); }
 }
 
-/* ===== ФРАЗЫ ===== */
-
 .floating-text {
     position: absolute;
     font-family: 'Pacifico', cursive;
@@ -126,8 +125,6 @@ html, body {
     white-space: nowrap;
     z-index: 6;
 }
-
-/* ===== СЕРДЕЧКИ ===== */
 
 .heart {
     position: absolute;
@@ -150,6 +147,9 @@ html, body {
 </head>
 
 <body>
+
+<!-- 🔊 АУДИО -->
+<audio id="bgMusic" src="music.mp3"></audio>
 
 <div class="envelope" onclick="openLetter()" id="envelope">
     <div class="envelope-body">
@@ -179,13 +179,17 @@ html, body {
 <script>
 const envelope = document.getElementById("envelope");
 const message = document.getElementById("message");
+const music = document.getElementById("bgMusic");
 
 function openLetter() {
     envelope.classList.add("open");
     envelope.style.animation = "none";
     envelope.style.transform = "scale(0)";
     envelope.style.opacity = "0";
-    
+
+    // ▶️ Запуск музыки
+    music.play();
+
     setTimeout(() => {
         envelope.style.display = "none";
         message.style.display = "block";
@@ -194,7 +198,7 @@ function openLetter() {
     }, 600);
 }
 
-/* ===== СЕРДЕЧКИ ===== */
+/* остальной JS полностью без изменений */
 
 function createHeart(x = null, y = null) {
     const heart = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -240,8 +244,6 @@ function startHearts() {
     });
 }
 
-/* ===== ФРАЗЫ ===== */
-
 function createFloatingText(text) {
     const element = document.createElement("div");
     element.className = "floating-text";
@@ -268,10 +270,10 @@ function startFloatingText() {
         "Самой нежной!",
         "Ты моя радость!",
         "Самая яркая звездочка!",
-	"С тобой каждый день особенный!",
-	"Ты — моя гармония!",
-	"Ты делаешь мир ярче!",
-	"Я счастлив с тобой!"
+        "С тобой каждый день особенный!",
+        "Ты — моя гармония!",
+        "Ты делаешь мир ярче!",
+        "Я счастлив с тобой!"
     ];
 
     setInterval(() => {
@@ -283,6 +285,10 @@ function startFloatingText() {
 
 </body>
 </html>
+
+
+
+
 
 
 
