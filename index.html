@@ -2,14 +2,19 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>С днём святого Валентина!</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 
 <style>
-body {
+html, body {
     margin: 0;
+    padding: 0;
     overflow: hidden;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
     background: radial-gradient(circle at center, #ff6b9a, #ff1e56);
     font-family: Arial, sans-serif;
     display: flex;
@@ -102,7 +107,7 @@ body {
     to { opacity: 1; transform: scale(1); }
 }
 
-/* ===== ФРАЗЫ (как было) ===== */
+/* ===== ФРАЗЫ ===== */
 
 .floating-text {
     position: absolute;
@@ -192,7 +197,8 @@ function createHeart(x = null, y = null) {
     heart.style.width = size + "px";
     heart.style.height = size + "px";
 
-    const startX = x !== null ? x : Math.random() * window.innerWidth;
+    const maxWidth = window.innerWidth - 80;
+    const startX = x !== null ? x : Math.random() * maxWidth;
     const startY = y !== null ? y : window.innerHeight;
 
     heart.style.left = startX + "px";
@@ -233,7 +239,8 @@ function createFloatingText(text) {
     element.className = "floating-text";
     element.innerText = text;
 
-    element.style.left = Math.random() * window.innerWidth + "px";
+    const maxLeft = window.innerWidth - 200;
+    element.style.left = Math.random() * maxLeft + "px";
     element.style.top = window.innerHeight + "px";
 
     const duration = Math.random() * 3 + 4;
