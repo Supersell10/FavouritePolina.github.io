@@ -94,20 +94,19 @@ html, body {
     position: absolute;
     text-align: center;
     color: white;
-    font-size: clamp(22px, 6vw, 42px); /* АВТОМАТИЧЕСКИЙ адаптив */
+    font-size: clamp(26px, 7vw, 48px); /* немного увеличил */
     display: none;
     animation: fadeIn 2s forwards;
     text-shadow: 0 0 25px rgba(255,255,255,0.9);
     font-family: 'Pacifico', cursive;
     z-index: 10;
-    white-space: nowrap; /* всегда в одну строку */
+    white-space: nowrap;
     max-width: 95vw;
 }
 
-/* На очень маленьких телефонах */
 @media (max-width: 400px) {
     .hidden-content {
-        font-size: 20px;
+        font-size: 22px;
     }
 }
 
@@ -174,7 +173,7 @@ html, body {
 </div>
 
 <div class="hidden-content" id="message">
-    С днём святого Валентина! ❤️
+    С днём святого Валентина! ❤️💋
 </div>
 
 <script>
@@ -280,6 +279,7 @@ function startFloatingText() {
 
 </body>
 </html>
+
 
 
 
